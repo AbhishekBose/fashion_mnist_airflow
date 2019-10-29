@@ -1,0 +1,5 @@
+*.npy
+*.pycache
+*.h5py
+*.log
+*.h5
