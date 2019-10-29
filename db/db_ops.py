@@ -2,6 +2,9 @@
 import pymongo
 from pymongo import MongoClient
 import sys
+import os
+import numpy as np
+sys.path.append('data/')
 # from settings import MONGO_DB_URL,MONGO_DB_NAME, DB
 
 MONGO_DB_NAME = 'fashion_mnist'
@@ -15,8 +18,8 @@ class mongoQueue:
         self.coll = DB[coll_name]
         self.coll_name = coll_name
 
-    def Enqueue(self,coll,query):
-        self.eq_id = coll.insert(query,check_keys=False)
+    def Enqueue(self,query):
+        self.eq_id = self.coll.insert(query,check_keys=False)
         print('Enqueud for object ID:::',self.eq_id)
 
     def Dequeue(self):
@@ -24,6 +27,16 @@ class mongoQueue:
         fetch_query = {'status':'Not Processed'}
         self.results = self.coll.find_one(fetch_query)
         return self.results
+
+    def getAllDatasets(self):
+        print(self.coll_name)
+        fetch_query = {}
+        dataset_list =[]
+        self.results = self.coll.find(fetch_query)
+        for i in self.results:
+            dataset_list.append(i['dataset_id'])
+        # print(self.results)
+        return dataset_list
 
     def getAllProcessing(self):
         print(self.coll_name)
@@ -35,6 +48,7 @@ class mongoQueue:
         print(self.coll_name)
         fetch_query = {'status':'Processed'}
         self.results = self.coll.find(fetch_query)
+
         return self.results
     
     # def get_vehicle_detector_status(self):
@@ -60,14 +74,34 @@ class mongoQueue:
 
 
 
+def insert_into_db(data_set_path,db,set_id):
+    x_train = np.load(data_set_path+'/'+set_id+'/'+'X_train.npy')
+    size = x_train.shape[0]
+    query = {'dataset_id':set_id,'num_of_images':str(size),'status':'Not Processed'}
+    print(query)
+    mq.Enqueue(query)
+
 
 #%%
-# coll_name = 'fetch_list'
-# mq = mongoQueue(coll_name)
+coll_name = 'dataset'
+mq = mongoQueue(coll_name)
 # x =mq.Dequeue()
-# y = mq.getAllProcessing()
-
-
 
 
 #%%
+if __name__ == "__main__":
+    data_folder_path = 'data'
+    coll_name = 'dataset'
+    mq = mongoQueue(coll_name)
+    all_datasets = mq.getAllDatasets()
+    for i in os.listdir(data_folder_path):
+        if i not in all_datasets:
+            print(i)
+            if i=='testing':
+                continue
+            elif i.endswith('.py'):
+                continue
+            else:
+                insert_into_db(data_folder_path,mq,i)
+    # for i in os.listdir(data_folder_path):
+        # if i
