@@ -20,7 +20,7 @@ class mongoQueue:
 
     def Enqueue(self,query):
         self.eq_id = self.coll.insert(query,check_keys=False)
-        print('Enqueud for object ID:::',self.eq_id)
+        print('Enqueued for object ID:::',self.eq_id)
 
     def Dequeue(self):
         print(self.coll_name)
@@ -74,10 +74,16 @@ class mongoQueue:
 
 
 
-def insert_into_db(data_set_path,db,set_id):
-    x_train = np.load(data_set_path+'/'+set_id+'/'+'X_train.npy')
-    size = x_train.shape[0]
-    query = {'dataset_id':set_id,'num_of_images':str(size),'status':'Not Processed'}
+def insert_into_db(data_set_path,db,set_id,test=False):
+    if test:
+        x_test = np.load(data_set_path+'/'+set_id+'/'+'X_test.npy')
+        size = x_test.shape[0]
+        query = {'dataset_id':set_id,'num_of_images':str(size),'status':'Not Processed','path':data_set_path+'/'+set_id+'/'+'X_test.npy','datatype':'testing'}
+
+    else:
+        x_train = np.load(data_set_path+'/'+set_id+'/'+'X_train.npy')
+        size = x_train.shape[0]
+        query = {'dataset_id':set_id,'num_of_images':str(size),'status':'Not Processed','path':data_set_path+'/'+set_id+'/'+'X_train.npy','datatype':'training'}
     print(query)
     mq.Enqueue(query)
 
@@ -98,10 +104,13 @@ if __name__ == "__main__":
         if i not in all_datasets:
             print(i)
             if i=='testing':
-                continue
+                testing = True
+                insert_into_db(data_folder_path,mq,i,testing)
             elif i.endswith('.py'):
+                testing = False
                 continue
             else:
-                insert_into_db(data_folder_path,mq,i)
+                testing = False
+                insert_into_db(data_folder_path,mq,i,testing)
     # for i in os.listdir(data_folder_path):
         # if i
