@@ -54,7 +54,7 @@ def model(inputShape):
     model.add(Dropout(0.4))
 
     # 3rd Fully Connected Layer
-    model.add(Dense(1000))256
+    model.add(Dense(1000))
     model.add(Activation('relu'))
     # Add Dropout
     model.add(Dropout(0.4))
@@ -86,12 +86,12 @@ def model_2():
     model.add(Flatten())
     model.add(Dense(1024))
     model.add(Dropout(0.5))
-    model.add(Dense(1))
+    model.add(Dense(10))
     model.add(Activation('softmax'))
     model.summary()
 
     # Compile the model
-    model.compile(loss=keras.losses.binary_crossentropy, optimizer='SGD', metrics=["accuracy"]) 
+    model.compile(loss=keras.losses.binary_crossentropy, optimizer='adam', metrics=["accuracy"]) 
 
     return model
 
