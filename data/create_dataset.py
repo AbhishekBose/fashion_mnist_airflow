@@ -22,12 +22,12 @@ trainY = np_utils.to_categorical(trainY, 10)
 testY = np_utils.to_categorical(testY, 10)
 # %%
 def split_datasets(X,Y):
-    X_split = np.split(X,10)
-    Y_split = np.split(Y,10)
+    X_split = np.split(X,12)
+    Y_split = np.split(Y,12)
     return X_split,Y_split
 
 #%%
-def save__dataset(X,Y,test_X,test_Y):
+def save_dataset(X,Y,test_X,test_Y):
     for i in range(0,len(X)):
         dir_path = 'data/000'+str(i)
         os.mkdir(dir_path)
@@ -41,4 +41,4 @@ def save__dataset(X,Y,test_X,test_Y):
 # %%
 if __name__ == "__main__":
     X,Y = split_datasets(trainX,trainY)
-    save__dataset(X,Y,testX,testY)
+    save_dataset(X,Y,testX,testY)
