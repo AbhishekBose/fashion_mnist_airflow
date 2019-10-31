@@ -73,25 +73,25 @@ def model(inputShape):
 # %%
 def model_2():
     model = Sequential()
-    model.add(Conv2D(filters=64, input_shape=(28,28,1), kernel_size=(2,2),padding='valid'))
+    model.add(Conv2D(filters=8, input_shape=(28,28,1), kernel_size=(2,2),padding='valid'))
     model.add(Activation('relu'))
     # Max Pooling
     model.add(MaxPooling2D(pool_size=(2,2),padding='valid'))
 
     # 2nd Convolutional Layer
-    model.add(Conv2D(filters=128, kernel_size=(2,2),padding='valid'))
-    model.add(Activation('relu'))
+    # model.add(Conv2D(filters=32, kernel_size=(2,2),padding='valid'))
+    # model.add(Activation('relu'))
     # Max Pooling
-    model.add(MaxPooling2D(pool_size=(2,2),padding='valid'))
+    # model.add(MaxPooling2D(pool_size=(2,2),padding='valid'))
     model.add(Flatten())
-    model.add(Dense(1024))
+    model.add(Dense(32))
     model.add(Dropout(0.5))
     model.add(Dense(10))
     model.add(Activation('softmax'))
     model.summary()
 
     # Compile the model
-    model.compile(loss=keras.losses.binary_crossentropy, optimizer='adam', metrics=["accuracy"]) 
+    model.compile(loss=keras.losses.binary_crossentropy, optimizer='SGD', metrics=["accuracy"]) 
 
     return model
 
