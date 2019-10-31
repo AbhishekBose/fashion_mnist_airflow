@@ -25,7 +25,8 @@ class LossHistory(keras.callbacks.Callback):
 def train(trainX,trainY,testX,testY):
     model = model_2()
     history = LossHistory()
-    model.fit(trainX,trainY, batch_size=data['batch_size'], epochs=data['epochs'], verbose=data['verbose'],validation_data=(testX,testY) ,callbacks=[history])
+    model.fit(trainX,trainY, batch_size=data['batch_size'], epochs=data['epochs'], verbose=data['verbose'],validation_data=(testX,testY),shuffle=data['shuffle'],callbacks=[history])
+    print(history)
 #%%
 if __name__ == "__main__":
     trainX = np.load('/home/abhishek/fashion_mnist_airflow/data/0000/X_train.npy')
