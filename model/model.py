@@ -8,6 +8,7 @@ from keras.layers.core import Flatten
 from keras.layers.core import Dropout
 from keras.layers.core import Dense
 from keras import backend as K
+from keras import metrics
 import keras
 
 # %%
@@ -30,7 +31,7 @@ def model(inputShape):
     model.add(Activation('relu'))
 
     # 4th Convolutional Layer
-    model.add(Conv2D(filters=384, kernel_size=(3,3), strides=(_21,1), padding='valid'))
+    model.add(Conv2D(filters=384, kernel_size=(3,3), strides=(1,1), padding='valid'))
     model.add(Activation('relu'))
 
     # 5th Convolutional Layer
@@ -71,7 +72,7 @@ def model(inputShape):
     return model
 
 # %%
-def model_2():
+def model_2(opt):
     model = Sequential()
     model.add(Conv2D(filters=8, input_shape=(28,28,1), kernel_size=(2,2),padding='valid'))
     model.add(Activation('relu'))
@@ -90,9 +91,9 @@ def model_2():
     model.add(Activation('softmax'))
     model.summary()
 
-    # Compile the model
-    model.compile(loss=keras.losses.binary_crossentropy, optimizer='SGD', metrics=["accuracy"]) 
-
+    # Compile the mode
+    model.compile(loss=keras.losses.categorical_crossentropy, optimizer=opt, metrics=["accuracy",metrics.Precision(),metrics.Recall()]) 
+    # model.compile(loss=keras.losses.categorical_crossentropy, optimizer=opt, metrics=["accuracy"]) 
     return model
 
 
