@@ -3,7 +3,7 @@ import os
 # os.environ['KERAS_BACKEND'] = 'tensorflow'
 from keras import backend as K
 import keras
-import tensorflow as tf
+# import tensorflow as tf
 import numpy as np
 import sys
 sys.path.append('model/')
@@ -35,7 +35,7 @@ def train(trainX,trainY,testX,testY,model):
 #%%
 if __name__ == "__main__":
     with mlflow.start_run():
-        model = model_2()
+        model = model_2(data['opt'])
         trainX = np.load('/home/abhishek/fashion_mnist_airflow/data/0000/X_train.npy')
         trainY = np.load('/home/abhishek/fashion_mnist_airflow/data/0000/Y_train.npy')
 
@@ -43,6 +43,7 @@ if __name__ == "__main__":
         testY = np.load('/home/abhishek/fashion_mnist_airflow/data/testing/Y_test.npy')
         trained_model = train(trainX,trainY,testX,testY,model)
         scores = model.evaluate(testX,testY,verbose=1)
+        print(scores)
         X_train_dim = trainX.shape
         Y_train_dim = trainY.shape
 
@@ -53,8 +54,10 @@ if __name__ == "__main__":
     
         mlflow.log_param("alpha",0.001)
         mlflow.log_param("epochs",data['epochs'])
+        mlflow.log_param('optimizer',data['opt'])
         mlflow.log_param("batch_size",data['batch_size'])
         mlflow.log_metric("eval_loss",scores[0])
         mlflow.log_metric("eval_acc",scores[1])
-        # mlflow.log_metric('score',scores)
+        mlflow.log_metric("eval_precision",scores[2])
+        mlflow.log_metric("eval_recall",scores[3])
         
