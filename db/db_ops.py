@@ -58,18 +58,18 @@ class mongoQueue:
     #     return self.status_result
 
         
-    def setAsProcessing(self,objectId):
-        print('ObjectId to be set as Processing::',objectId)
+    def setAsProcessing(self,data_id):
+        print('data_id to be set as Processing::',data_id)
         # self.results = self.coll.find_one_and_update(query={"_id":objectId},update={"$set": {"process_state": "Processing"}})
-        self.results = self.coll.find_one_and_update({"_id":objectId},{"$set": {"status": "Processing"}})
+        self.results = self.coll.find_one_and_update({"dataset_id":data_id},{"$set": {"status": "Processing"}})
         # self.results = self.coll.update_one({"_id": objectId}, {"$set": {"process_state": "Processing"}})
         print(self.results)
         return self.results  
 
 
-    def setAsProcessed(self,objectId):
-        print('ObjectId to be set as Processed::',objectId)
-        self.results = self.coll.find_one_and_update({"_id":objectId},{"$set": {"status": "Processed"}})
+    def setAsProcessed(self,data_id):
+        print('ObjectId to be set as Processed::',data_id)
+        self.results = self.coll.find_one_and_update({"dataset_id":data_id},{"$set": {"status": "Processed"}})
         return self.results        
 
 
