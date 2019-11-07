@@ -1,0 +1,6 @@
+name: fashion_mnist_mlflow
+
+entry_points:
+  main:
+    command: "python train.py"
+ 
