@@ -1,6 +1,7 @@
 {
     "batch_size":1,
-    "epochs":100,
+    "epochs":1,
     "verbose":1,
-    "shuffle":true
+    "shuffle":true,
+    "opt":"SGD"
 }
