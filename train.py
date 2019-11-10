@@ -1,19 +1,16 @@
 #%%
 import os
-# os.environ['KERAS_BACKEND'] = 'tensorflow'
 from keras import backend as K
 import keras
-# import tensorflow as tf
+import tensorflow as tf
 import numpy as np
 import sys
 sys.path.append('model/')
 sys.path.append('db/')
-from model import model_2
+from model import model
 import json
 from db_ops import mongoQueue
 import mlflow
-
-
 
 #%%
 print('LOADING TRANING PARAMS FROM JSON...')
@@ -31,39 +28,38 @@ class LossHistory(keras.callbacks.Callback):
     def on_batch_end(self, batch, logs={}):
         self.losses.append(logs.get('loss'))
 #%%
-def train(trainX,trainY,testX,testY,model):
+def train(trainX,trainY,model):
     history = LossHistory()
-    model.fit(trainX,trainY, batch_size=data['batch_size'], epochs=data['epochs'], verbose=data['verbose'],validation_split=0.3,shuffle=data['shuffle'],callbacks=[history])
-    print(history)
+    model.fit(trainX,trainY, batch_size=data['batch_size'], epochs=data['epochs'], 
+                verbose=data['verbose'],validation_split=0.3,
+                        shuffle=data['shuffle'],callbacks=[history])
     return model
 #%%
 if __name__ == "__main__":
 
     coll_name = 'dataset'
     mq = mongoQueue(coll_name)
-    model = model_2(data['opt'])
+    model = model(data['opt'])
     print(os.getcwd())
-    # parent_path = '/home/abhishek/fashion_mnist_airflow/'
+    
     dataset_count = 0
     with mlflow.start_run(run_name='fashion_mnist'):
         while mq.Dequeue !=None:
             try:
                 dataset_info = mq.Dequeue()
                 dataset_id = dataset_info['dataset_id']
-                # with mlflow.start_run():
                 mq.setAsProcessing(dataset_id)
                 train_X_path = dataset_info['path']
                 train_Y_path = train_X_path.replace('X','Y')
                 trainX = np.load(train_X_path)
                 trainY = np.load(train_Y_path)
-                # trainX = np.load('/home/abhishek/fashion_mnist_airflow/data/0000/X_train.npy')
-                # trainY = np.load('/home/abhishek/fashion_mnist_airflow/data/0000/Y_train.npy')
 
                 testX = np.load('data/testing/X_test.npy')
                 testY = np.load('data/testing/Y_test.npy')
-                trained_model = train(trainX,trainY,testX,testY,model)
+                trained_model = train(trainX,trainY,model)
                 scores = model.evaluate(testX,testY,verbose=1)
                 print(scores)
+                break
                 X_train_dim = trainX.shape
                 Y_train_dim = trainY.shape
 
