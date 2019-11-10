@@ -50,14 +50,7 @@ class mongoQueue:
         self.results = self.coll.find(fetch_query)
 
         return self.results
-    
-    # def get_vehicle_detector_status(self):
-    #     print('Status collection is::: ',self.status_coll)
-    #     status_query = {'Process_Name':'Vehicle_Detection'}
-    #     self.status_result = self.status_coll.find(status_query)
-    #     return self.status_result
 
-        
     def setAsProcessing(self,data_id):
         print('data_id to be set as Processing::',data_id)
         # self.results = self.coll.find_one_and_update(query={"_id":objectId},update={"$set": {"process_state": "Processing"}})
@@ -86,14 +79,10 @@ def insert_into_db(data_set_path,db,set_id,test=False):
         query = {'dataset_id':set_id,'num_of_images':str(size),'status':'Not Processed','path':data_set_path+'/'+set_id+'/'+'X_train.npy','datatype':'training'}
     print(query)
     mq.Enqueue(query)
-
-
 #%%
 coll_name = 'dataset'
 mq = mongoQueue(coll_name)
 # x =mq.Dequeue()
-
-
 #%%
 if __name__ == "__main__":
     data_folder_path = 'data'
