@@ -1,4 +1,5 @@
 name: fashion_mnist_mlflow
+conda_env : config/conda.yaml
 
 entry_points:
   main:
