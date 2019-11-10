@@ -12,7 +12,7 @@ from keras import metrics
 import keras
 
 # %%
-def model(inputShape):
+def model_2(inputShape):
     input_shape = inputShape
     model = Sequential()
     model.add(Conv2D(filters=96, input_shape=(224,224,3), kernel_size=(11,11), strides=(4,4), padding='valid'))
@@ -72,7 +72,7 @@ def model(inputShape):
     return model
 
 # %%
-def model_2(opt):
+def model(opt):
     model = Sequential()
     model.add(Conv2D(filters=8, input_shape=(28,28,1), kernel_size=(2,2),padding='valid'))
     model.add(Activation('relu'))
@@ -80,10 +80,10 @@ def model_2(opt):
     model.add(MaxPooling2D(pool_size=(2,2),padding='valid'))
 
     # 2nd Convolutional Layer
-    # model.add(Conv2D(filters=32, kernel_size=(2,2),padding='valid'))
-    # model.add(Activation('relu'))
+    model.add(Conv2D(filters=32, kernel_size=(2,2),padding='valid'))
+    model.add(Activation('relu'))
     # Max Pooling
-    # model.add(MaxPooling2D(pool_size=(2,2),padding='valid'))
+    model.add(MaxPooling2D(pool_size=(2,2),padding='valid'))
     model.add(Flatten())
     model.add(Dense(32))
     model.add(Dropout(0.5))
